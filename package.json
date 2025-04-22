@@ -1,0 +1,25 @@
+{
+  "name": "proyecto_is2",
+  "version": "1.0.0",
+  "description": "Aplicación web de recomendación de actividades de acuerdo al clima",
+  "homepage": "https://github.com/clcser/Proyecto_IS2#readme",
+  "bugs": {
+    "url": "https://github.com/clcser/Proyecto_IS2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clcser/Proyecto_IS2.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/es6-promise": "^0.0.33"
+  }
+}

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ES2024",
+        "lib": [
+            "ES2015",
+            "DOM",
+        ]
+    }
+}
