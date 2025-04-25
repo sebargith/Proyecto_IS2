@@ -1,12 +1,11 @@
 // TODO:
-// - Definir actividades para cada perfil (interface)
 // - Definir/confirmar imagenes
 
 // Ilustraciones sacadas de: https://blush.design/collections/L9oIBvB7R7IjzZWxOfIu/open-doodles
 
 import { Actividad, actividades } from './activities';
 
-interface Profile {
+export interface Profile {
   id: number;
   name: string;
   image: string;
