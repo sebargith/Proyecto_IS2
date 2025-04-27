@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getData, APIResponse } from '../get';
+import { current, Realtime } from '../weather';
 
 export interface CondicionesClimaticas {
   temperatura: number;   // °C
@@ -14,12 +14,12 @@ export function useWeather() {
   useEffect(() => {
     (async () => {
       try {
-        const data: APIResponse = await getData();           // ya existente
+        const { temp_c, wind_kph, precip_mm, uv, }: Realtime = await current();           // ya existente
         setCond({
-          temperatura: data.current.temp_c,
-          viento: data.current.wind_kph,
-          lluvia: data.current.precip_mm > 0,
-          indiceUV: data.current.uv,
+          temperatura: temp_c,
+          viento: wind_kph,
+          lluvia: precip_mm > 0,
+          indiceUV: uv,
         });
       } catch (e) {
         console.error('Fallo al obtener clima:', e);

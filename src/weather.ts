@@ -51,6 +51,11 @@ export enum Method {
     Forecast = 'forecast.json',
 }
 
+export type APIResponse = {
+    location: Location,
+    current: Realtime,
+}
+
 const BASE_URL: string = 'http://api.weatherapi.com/v1';
 
 export function makeQuery(method: Method): string {
@@ -58,7 +63,8 @@ export function makeQuery(method: Method): string {
 }
 
 export async function current(): Promise<Realtime> {
-    return (await fetch(makeQuery(Method.Current))).json();
+    const { current }: APIResponse = (await (await fetch(makeQuery(Method.Current))).json());
+    return current;
 }
 
 export function forecast(days: number = 1) {
