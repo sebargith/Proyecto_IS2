@@ -69,7 +69,7 @@ export function makeQuery(method: Method, locationQuery: string): string {
     return `${BASE_URL}/${method}?key=${import.meta.env.VITE_API_KEY}&q=${encodeURIComponent(locationQuery)}`;
 }
 
-export async function current(locationQuery: string): Promise<Realtime> {
+export async function current(locationQuery: string): Promise<APIResponse> {
     try {
         const response = await fetch(makeQuery(Method.Current, locationQuery));
         if (!response.ok) {
@@ -78,15 +78,15 @@ export async function current(locationQuery: string): Promise<Realtime> {
             console.error("Error de WeatherAPI:", errorData);
             throw new Error(errorData.error?.message ?? `Error ${response.status} al obtener el clima`);
         }
-        const { current }: APIResponse = await response.json();
-        return current;
+        const apiresponse: APIResponse = await response.json();
+        return apiresponse;
     } catch (e) {
         console.error("Error en la función current:", e);
         throw e; // Re-lanzar el error para que sea manejado por quien llama
     }
 }
 
-export async function forecast(locationQuery: string, days: number = 1): Promise<any> {
+export async function forecast(locationQuery: string, days: number = 1): Promise<Response> {
     if (days < 1 || days > 14) {
         throw new Error(`El pronóstico debe estar en el rango de [1, 14] días, se recibió: ${days}`);
     }
