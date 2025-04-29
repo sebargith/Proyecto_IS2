@@ -1,4 +1,4 @@
-// TODO:
+// Descripción: Este archivo contiene la definición de los perfiles de usuario y sus actividades asociadas.
 // - Definir/confirmar imagenes
 
 // Ilustraciones sacadas de: https://blush.design/collections/L9oIBvB7R7IjzZWxOfIu/open-doodles

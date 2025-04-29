@@ -58,21 +58,55 @@ export type APIResponse = {
 
 const BASE_URL: string = 'http://api.weatherapi.com/v1';
 
-export function makeQuery(method: Method): string {
-    return `${BASE_URL}/${method}?key=${import.meta.env.VITE_API_KEY}&q=Concepcion`
+export function makeQuery(method: Method, locationQuery: string): string {
+    // Asegúrate de que la API key está configurada en tu .env
+    if (!import.meta.env.VITE_API_KEY) {
+        console.error("Error: VITE_API_KEY no está definida en el entorno.");
+        // Podrías lanzar un error o devolver una query inválida
+        return `${BASE_URL}/${method}?key=NO_API_KEY&q=${encodeURIComponent(locationQuery)}`;
+    }
+    // Codifica la ubicación para seguridad en la URL
+    return `${BASE_URL}/${method}?key=${import.meta.env.VITE_API_KEY}&q=${encodeURIComponent(locationQuery)}`;
 }
 
-export async function current(): Promise<Realtime> {
-    const { current }: APIResponse = (await (await fetch(makeQuery(Method.Current))).json());
-    return current;
+export async function current(locationQuery: string): Promise<Realtime> {
+    try {
+        const response = await fetch(makeQuery(Method.Current, locationQuery));
+        if (!response.ok) {
+            // Manejar errores de la API (ej: ubicación no encontrada, API key inválida)
+            const errorData = await response.json();
+            console.error("Error de WeatherAPI:", errorData);
+            throw new Error(errorData.error?.message ?? `Error ${response.status} al obtener el clima`);
+        }
+        const { current }: APIResponse = await response.json();
+        return current;
+    } catch (e) {
+        console.error("Error en la función current:", e);
+        throw e; // Re-lanzar el error para que sea manejado por quien llama
+    }
 }
 
-export function forecast(days: number = 1) {
-    if (days < 0 || days > 14) {
-        throw Error(`Forecast must be in the [0, 4] range, got ${days}`);
+export async function forecast(locationQuery: string, days: number = 1): Promise<any> {
+    if (days < 1 || days > 14) {
+        throw new Error(`El pronóstico debe estar en el rango de [1, 14] días, se recibió: ${days}`);
     }
 
-    const query = `${makeQuery(Method.Forecast)}&days=${days}`;
+    try {
+        // Se construye la query con la ubicación y el número de días
+        const query = `${makeQuery(Method.Forecast, locationQuery)}&days=${days}`;
+        const response = await fetch(query);
 
-    return query
+        if (!response.ok) {
+            // Manejar errores de la API
+            const errorData = await response.json();
+            console.error("Error de WeatherAPI (forecast):", errorData);
+            throw new Error(errorData.error?.message ?? `Error ${response.status} al obtener el pronóstico`);
+        }
+
+        // Retornamos el resultado completo del pronóstico
+        return await response.json();
+    } catch (e) {
+        console.error("Error en la función forecast:", e);
+        throw e; // Re-lanzar el error para que sea manejado por quien llama
+    }
 }
