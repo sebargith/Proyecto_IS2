@@ -158,13 +158,25 @@ const App: React.FC = () => {
               <h3 className="text-md font-medium text-gray-800 mb-2">{profile.name}</h3>
 
               <div className="space-y-2">
-                {profile.activities.map((actividad, i) => (
-                  <Recomendacion
-                    key={`${profile.id}-${i}`}
-                    actividad={actividad}
-                    condiciones={condiciones}
-                  />
-                ))}
+                {profile.activities
+                  .filter(actividad => {
+                    // Evaluar si la actividad cumple con las condiciones climáticas
+                    const esAdecuada =
+                      condiciones.temperatura >= actividad.temperatura.min &&
+                      condiciones.temperatura <= actividad.temperatura.max &&
+                      condiciones.viento <= actividad.vientoMax &&
+                      (!condiciones.lluvia || actividad.lluviaPermitida) &&
+                      condiciones.indiceUV <= actividad.indiceUVMax;
+
+                    return esAdecuada; // Solo incluir actividades adecuadas
+                  })
+                  .map((actividad, i) => (
+                    <Recomendacion
+                      key={`${profile.id}-${i}`}
+                      actividad={actividad}
+                      condiciones={condiciones}
+                    />
+                  ))}
               </div>
             </div>
           ))
