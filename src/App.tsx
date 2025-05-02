@@ -6,21 +6,17 @@ import ProfileSelect from './components/ProfileSelect';
 import { useWeather } from './hooks/useWeather';
 import WeatherWidget from './components/WeatherWidget';
 
-// Etiquetas de listas despleglables
+// Etiquetas de listas desplegables
 const LABELS = ['Preferencia 1', 'Preferencia 2', 'Preferencia 3', 'Preferencia 4'];
 
 const App: React.FC = () => {
-  // Estado de ubicación
   const [locationQuery, setLocationQuery] = useState<string | null>(null);
   const [manualInput, setManualInput] = useState('');
   const [geoError, setGeoError] = useState<string | null>(null);
   const [detecting, setDetecting] = useState(false);
 
-  // hook del clima
-  const { condiciones, isLoading: loadingWeather, error: weatherError } =
-    useWeather(locationQuery);
+  const { condiciones, isLoading: loadingWeather, error: weatherError } = useWeather(locationQuery);
 
-  // Estado de perfiles
   const [slots, setSlots] = useState<string[]>(['', '', '', '']);
 
   const handleSlotChange = (index: number, newId: string) =>
@@ -30,16 +26,14 @@ const App: React.FC = () => {
       return next;
     });
 
-  // Perfiles únicos seleccionados
   const perfilesElegidos: Profile[] = Array.from(
     new Set(
       slots
-        .filter(Boolean) // quita strings vacíos
+        .filter(Boolean)
         .map(id => profiles.find(p => p.id.toString() === id)!)
     )
   );
 
-  // Geolocalización
   const handleDetectLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setGeoError('Tu navegador no soporta geolocalización.');
@@ -74,7 +68,6 @@ const App: React.FC = () => {
     );
   }, []);
 
-  // Poner localización manualmente
   const handleSubmitCity = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (manualInput.trim()) {
@@ -83,38 +76,38 @@ const App: React.FC = () => {
     }
   };
 
+  let bgColor = 'bg-gradient-to-br from-blue-400 via-yellow-300 to-yellow-100'; 
+
   return (
-    <>
-      {/* Widget de clima*/}
-      {condiciones && <WeatherWidget condiciones={condiciones} />}
+    <div className={`min-h-screen ${bgColor} p-6`}>
+      <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl p-6 space-y-6">
+        {/* Widget clima */}
+        {condiciones && <WeatherWidget condiciones={condiciones} />}
 
-      <div className="w-[800px] mx-auto p-4 bg-gray-100 shadow-lg rounded-lg">
-        {/*Tarjeta de ubicación */}
-        <div className="mb-6 p-4 border border-gray-300 rounded-md bg-white">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700">Elige tu ubicación</h2>
+        {/* Tarjeta ubicación */}
+        <div className="p-4 border border-gray-300 rounded-xl bg-gray-50">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Elige tu ubicación</h2>
 
-          <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={handleDetectLocation}
               disabled={detecting}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {detecting ? 'Detectando…' : 'Detectar Mi Ubicación'}
             </button>
 
-            <span className="hidden sm:inline self-center text-gray-500 mx-2">o</span>
-
-            <form onSubmit={handleSubmitCity} className="flex flex-grow w-full sm:w-auto">
+            <form onSubmit={handleSubmitCity} className="flex flex-1">
               <input
                 type="text"
                 value={manualInput}
                 onChange={e => setManualInput(e.target.value)}
                 placeholder="Escribe ciudad o lat,lon"
-                className="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-grow p-2 rounded-l-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               />
               <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-r-md"
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 rounded-r-xl"
               >
                 Buscar
               </button>
@@ -130,8 +123,8 @@ const App: React.FC = () => {
           )}
         </div>
 
-        {/* Cuatro listas desplegables en una fila */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 place-items-center">
+        {/* Listas desplegables */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {LABELS.map((lbl, idx) => (
             <ProfileSelect
               key={idx}
@@ -143,24 +136,22 @@ const App: React.FC = () => {
           ))}
         </div>
 
-        {/*Mensajes de carga / error del clima */}
+        {/* Mensajes de estado */}
         {locationQuery && loadingWeather && (
-          <p className="text-center text-gray-600 my-4">Cargando clima…</p>
+          <p className="text-center text-gray-600">Cargando clima…</p>
         )}
         {locationQuery && weatherError && (
-          <p className="text-center text-red-600 my-4">Error al cargar clima: {weatherError}</p>
+          <p className="text-center text-red-600">Error al cargar clima: {weatherError}</p>
         )}
 
-        {/*Recomendaciones */}
+        {/* Recomendaciones */}
         {condiciones && perfilesElegidos.length > 0 && (
           perfilesElegidos.map(profile => (
-            <div key={profile.id} className="mb-6">
-              <h3 className="text-md font-medium text-gray-800 mb-2">{profile.name}</h3>
-
-              <div className="space-y-2">
+            <div key={profile.id} className="space-y-2">
+              <h3 className="text-lg font-semibold text-gray-800">{profile.name}</h3>
+              <div className="space-y-3">
                 {profile.activities
                   .filter(actividad => {
-                    // Evaluar si la actividad cumple con las condiciones climáticas
                     const esAdecuada =
                       condiciones.temperatura >= actividad.temperatura.min &&
                       condiciones.temperatura <= actividad.temperatura.max &&
@@ -168,13 +159,12 @@ const App: React.FC = () => {
                       (!condiciones.lluvia || actividad.lluviaPermitida) &&
                       condiciones.indiceUV <= actividad.indiceUVMax;
 
-                    return esAdecuada; // Solo incluir actividades adecuadas
+                    return esAdecuada;
                   })
                   .map((actividad, i) => (
                     <Recomendacion
                       key={`${profile.id}-${i}`}
                       actividad={actividad}
-                      condiciones={condiciones}
                     />
                   ))}
               </div>
@@ -183,12 +173,12 @@ const App: React.FC = () => {
         )}
 
         {condiciones && perfilesElegidos.length === 0 && (
-          <p className="text-center text-gray-600 mt-4">
+          <p className="text-center text-gray-600">
             Selecciona al menos un perfil en las listas de arriba.
           </p>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

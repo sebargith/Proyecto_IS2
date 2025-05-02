@@ -8,7 +8,7 @@ interface Props {
   perfiles: Profile[];
   //ID del perfil 
   value: string;
-  // Devuelve el nuego ID al componente padre
+  // Devuelve el nuevo ID al componente padre
   onChange: (newId: string) => void;
 }
 
@@ -19,8 +19,8 @@ const ProfileSelect: React.FC<Props> = ({ label, perfiles, value, onChange }) =>
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="px-4 py-2 rounded-full border-2 border-green-400 bg-green-100
-                 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+      className="px-2 py-1 rounded border-2 border-yellow-300 bg-yellow-50
+                 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-xs"
     >
       <option value="">— Selecciona —</option>
       {perfiles.map(p => (

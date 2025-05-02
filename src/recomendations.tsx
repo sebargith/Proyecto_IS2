@@ -1,47 +1,25 @@
 import React from "react";
 import { Actividad } from "./activities";
 
-interface CondicionesClimaticas {
-    temperatura: number;
-    viento: number;
-    lluvia: boolean;
-    indiceUV: number;
-  }
-  
-  interface Props {
-    actividad: Actividad;
-    condiciones: CondicionesClimaticas;
-  }
-  
-  const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
-    const {
-      temperatura,
-      viento,
-      lluvia,
-      indiceUV,
-    } = condiciones;
-  
-    const esAdecuada =
-      temperatura >= actividad.temperatura.min &&
-      temperatura <= actividad.temperatura.max &&
-      viento <= actividad.vientoMax &&
-      (!lluvia || actividad.lluviaPermitida) &&
-      indiceUV <= actividad.indiceUVMax;
-  
-    return (
-      <div className="p-4 rounded-xl shadow bg-white space-y-2 border border-gray-200">
-        <h2 className="text-xl font-bold text-blue-600">{actividad.nombre}</h2>
-        <p>
-          Condiciones actuales: {temperatura}°C, {viento} km/h,{" "}
-          {lluvia ? "lluvia" : "sin lluvia"}, UV: {indiceUV}
-        </p>
-        <p className={`font-semibold ${esAdecuada ? "text-green-600" : "text-red-600"}`}>
-          {esAdecuada
-            ? "Condiciones ideales para esta actividad."
-            : "No se recomienda realizar esta actividad en este momento."}
-        </p>
-      </div>
-    );
-  };
-  
-  export default Recomendacion;
+interface Props {
+  actividad: Actividad;
+}
+
+const Recomendacion: React.FC<Props> = ({ actividad }) => {
+  return (
+    <div
+      className="p-5 rounded-2xl shadow-md transform transition duration-300 hover:scale-105 border-2 border-green-400 bg-gradient-to-br from-green-50 to-white"
+    >
+      <h2 className="text-2xl font-bold mb-3 text-gray-800">{actividad.nombre}</h2>
+
+      {/* Mostrar la descripción de la actividad */}
+      <p className="text-sm text-gray-600 mb-3">{actividad.descripcion}</p>
+
+      <p className="font-semibold text-green-700">
+        ✅ Condiciones ideales para esta actividad.
+      </p>
+    </div>
+  );
+};
+
+export default Recomendacion;
