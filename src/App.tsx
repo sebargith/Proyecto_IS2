@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import profiles, { Profile } from './profiles';
-import Recomendacion from './recomendations';
+import Recomendacion from './components/Recomendacion';     
 
 import ProfileSelect from './components/ProfileSelect';
 import { useWeather } from './hooks/useWeather';
@@ -15,7 +15,8 @@ const App: React.FC = () => {
   const [geoError, setGeoError] = useState<string | null>(null);
   const [detecting, setDetecting] = useState(false);
 
-  const { condiciones, isLoading: loadingWeather, error: weatherError } = useWeather(locationQuery);
+  const { condiciones, isLoading: loadingWeather, error: weatherError } =
+    useWeather(locationQuery);
 
   const [slots, setSlots] = useState<string[]>(['', '', '', '']);
 
@@ -76,7 +77,7 @@ const App: React.FC = () => {
     }
   };
 
-  let bgColor = 'bg-gradient-to-br from-blue-400 via-yellow-300 to-yellow-100'; 
+  let bgColor = 'bg-gradient-to-br from-blue-400 via-yellow-300 to-yellow-100';
 
   return (
     <div className={`min-h-screen ${bgColor} p-6`}>
@@ -149,7 +150,9 @@ const App: React.FC = () => {
           perfilesElegidos.map(profile => (
             <div key={profile.id} className="space-y-2">
               <h3 className="text-lg font-semibold text-gray-800">{profile.name}</h3>
-              <div className="space-y-3">
+              
+              {/* filas de 3 */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {profile.activities
                   .filter(actividad => {
                     const esAdecuada =
@@ -165,6 +168,7 @@ const App: React.FC = () => {
                     <Recomendacion
                       key={`${profile.id}-${i}`}
                       actividad={actividad}
+                      condiciones={condiciones}        
                     />
                   ))}
               </div>
