@@ -77,7 +77,7 @@ const App: React.FC = () => {
     }
   };
 
-  let bgColor = 'bg-gradient-to-br from-blue-400 via-yellow-300 to-yellow-100';
+  const bgColor = 'bg-gradient-to-br from-blue-400 via-yellow-300 to-yellow-100';
 
   return (
     <div className={`min-h-screen ${bgColor} p-6`}>

@@ -11,7 +11,7 @@ export interface Actividad {
   lluviaPermitida: boolean;
   indiceUVMax: number;
   imagen: string;
-  descripcion: string;  // Nueva propiedad para la descripción
+  descripcion: string;
 }
 
 export const actividades: Actividad[] = [
