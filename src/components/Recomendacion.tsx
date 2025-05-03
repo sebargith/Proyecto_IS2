@@ -1,5 +1,5 @@
 import React from 'react';
-import { Actividad } from '../activities'; 
+import { Actividad } from '../activities';
 import { CondicionesClimaticas } from '../hooks/useWeather';
 
 interface Props {
@@ -18,11 +18,20 @@ const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
     indiceUV <= actividad.indiceUVMax;
 
   return (
-    <article className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+    <article
+      className="bg-white border border-gray-200 rounded-xl overflow-hidden
+                 shadow-lg transition
+                 hover:-translate-y-1 hover:shadow-2xl
+                 focus:-translate-y-1 focus:shadow-2xl
+                 cursor-pointer"
+      tabIndex={0}
+      role="button"
+    >
       <img
         src={actividad.imagen}
         alt={actividad.nombre}
         className="w-full h-40 object-cover"
+        loading="lazy"
       />
 
       <div className="p-4 space-y-2">
