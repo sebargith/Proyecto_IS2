@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-// Asegúrate que la importación de 'current' y 'Realtime' es correcta
 import { APIResponse, current } from '../weather'; // Ajusta la ruta si es necesario
 
 export interface CondicionesClimaticas {
   ciudad: string,
   temperatura: number;   // °C
   viento: number;        // km/h
-  lluvia: boolean;       // ¿precipitación?
+  lluvia: boolean;       // ¿hay precipitación?
   indiceUV: number;
 }
 
-// El hook ahora acepta la query de ubicación (puede ser 'Ciudad' o 'lat,lon')
+// Este hook se encarga de obtener el clima actual de una ciudad
 // Puede ser null inicialmente o si hay un error obteniendo la ubicación.
 export function useWeather(locationQuery: string | null) {
   const [cond, setCond] = useState<CondicionesClimaticas | null>(null);
