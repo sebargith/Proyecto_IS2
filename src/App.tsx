@@ -5,11 +5,15 @@ import Recomendacion from './components/Recomendacion';
 import ProfileSelect from './components/ProfileSelect';
 import { useWeather } from './hooks/useWeather';
 import WeatherWidget from './components/WeatherWidget';
+import Auth from './components/Auth'; // <--- Agrega esta línea
 
 // Etiquetas de listas desplegables
 const LABELS = ['Preferencia 1', 'Preferencia 2', 'Preferencia 3', 'Preferencia 4'];
 
 const App: React.FC = () => {
+  // Nuevo estado para autenticación
+  const [authed, setAuthed] = useState(false);
+
   const [locationQuery, setLocationQuery] = useState<string | null>(null);
   const [manualInput, setManualInput] = useState('');
   const [geoError, setGeoError] = useState<string | null>(null);
@@ -78,6 +82,11 @@ const App: React.FC = () => {
   };
 
   const bgColor = 'bg-gradient-to-br from-blue-400 via-yellow-300 to-yellow-100';
+
+  // Si no está autenticado, muestra Auth
+  if (!authed) {
+    return <Auth onAuthSuccess={() => setAuthed(true)} />;
+  }
 
   return (
     <div className={`min-h-screen ${bgColor} p-6`}>
