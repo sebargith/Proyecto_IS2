@@ -1,5 +1,5 @@
-import React from 'react';
-import { CondicionesClimaticas } from '../hooks/useWeather';
+import React from "react";
+import { CondicionesClimaticas } from "../hooks/useWeather";
 
 interface Props {
   condiciones: CondicionesClimaticas;
@@ -9,15 +9,16 @@ const WeatherWidget: React.FC<Props> = ({ condiciones }) => {
   const { ciudad, temperatura, viento, lluvia, indiceUV } = condiciones;
 
   return (
-    <div className="fixed top-4 right-4 w-56 p-4 rounded-xl shadow-lg bg-sky-50 border border-sky-200">
-      <h3 className="text-lg font-semibold text-sky-700 mb-2">Clima actual en {ciudad}</h3>
-
-      <ul className="space-y-1 text-sm text-gray-800">
-        <li>🌡️ Temperatura: <strong>{temperatura} °C</strong></li>
-        <li>💨 Viento: <strong>{viento} km/h</strong></li>
-        <li>{lluvia ? '🌧️ Llueve' : '☀️ Sin lluvia'}</li>
-        <li>🔆 Índice UV: <strong>{indiceUV}</strong></li>
-      </ul>
+    <div className="flex flex-col items-start bg-blue-100 px-4 py-2 rounded-xl shadow-md text-sm text-blue-900 border border-blue-300">
+      <h3 className="font-semibold text-blue-800 mb-1 text-l">
+        Clima actual en {ciudad}
+      </h3>
+      <div className="flex gap-3 flex-wrap">
+        <span>🌡 {temperatura}°C</span>
+        <span>💨 {viento} km/h</span>
+        <span>{lluvia ? "🌧️ Llueve" : "☀️ Sin lluvia"}</span>
+        <span>🔆 UV {indiceUV}</span>
+      </div>
     </div>
   );
 };
