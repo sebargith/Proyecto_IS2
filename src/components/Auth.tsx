@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 interface Props {
   onAuthSuccess: () => void;
@@ -15,10 +16,17 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
 
   const handleSubmit = (e: React.FormEvent) => {    // Se debe modificar aquí cuando se posea la base de datos
     e.preventDefault();
-    // Simulación de autenticación (reemplaza por lógica real)
     if (form.email && form.password && (isLogin || form.name)) {
-      setError('');
-      onAuthSuccess();
+      // fetch('/api', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(form)}).then(console.log);
+      axios.post('/api', form)
+        .then(({ data }) => {
+          if (data) {
+            setError('');
+            onAuthSuccess();
+          }else {
+            setError('Oh no!');
+          }
+        });
     } else {
       setError('Completa todos los campos.');
     }
