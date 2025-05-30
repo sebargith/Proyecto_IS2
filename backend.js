@@ -17,26 +17,62 @@ const client = new Client({
 
 await client.connect();
 
-http.createServer(function(req, res) {
+http.createServer(async function(req, res) {
   let rawData;
 
-  // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8000/');
-
   req
-    .on('data', chunk => {
-      rawData = JSON.parse(chunk);
-    })
-    .on('end',  () => {
-      const { email, password } = rawData;
-      client.query(`SELECT username, password FROM usuario WHERE email = '${email}'`)
-        .then(({ rows }) => {
+    .on('data', chunk => { rawData = JSON.parse(chunk); })
+    .on('end',  async () => {
+      const { username, password, route } = rawData;
+
+      switch (route) {
+        case '/register': {
+          const { rows } = await client.query(
+            `
+            SELECT email
+              FROM usuario
+              WHERE email = '${username}'`
+          );
           if (rows.length == 1) {
-            res.write(`${rows[0].password == password}`);
-          } else {
-            res.write('false')
+              res.statusCode = 409;
+              res.end();
+              break;
           }
+
+          await client.query(
+            `
+            INSERT INTO usuario (username, email, password, age)
+              VALUES    ('${username}', '${username}', '${password}', 0)`
+          );
+
+          res.write(username);
           res.end();
-        });
+          break;
+        }
+        case '/login': {
+          const { rows } = await client.query(
+            `
+            SELECT username, email, password
+              FROM usuario
+              WHERE email = '${username}' AND password = '${password}';`
+          );
+          switch (rows.length) {
+            case 0:
+              res.statusCode = 401;
+              res.end();
+              break;
+            case 1:
+              res.write(username);
+              res.end();
+              break;
+          }
+          break;
+        }
+        default:
+          res.write('Error!');
+          res.end();
+          break;
+      }
     });
 })
 .listen(8000);

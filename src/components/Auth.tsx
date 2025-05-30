@@ -6,7 +6,7 @@ interface Props {
 }
 
 /* URL del backend --------------------------------------------------------- */
-axios.defaults.baseURL = 'http://localhost:4000';
+// axios.defaults.baseURL = 'http://localhost:4000';
 
 const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -29,7 +29,7 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
     try {
       const route = isLogin ? '/login' : '/register';
       /* El backend usa `username`, aquí enviamos el email como tal */
-      const payload = { username: form.email, password: form.password };
+      const payload = { username: form.email, password: form.password, route };
 
       const { data } = await axios.post(route, payload); // { id, username } si es login
 

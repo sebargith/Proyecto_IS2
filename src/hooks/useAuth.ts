@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:4000';     // backend
+// axios.defaults.baseURL = 'http://localhost:4000';     // backend
 
 interface User { id: number; username: string }
 
