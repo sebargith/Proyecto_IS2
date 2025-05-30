@@ -5,6 +5,7 @@ import ProfileSelect from "./components/ProfileSelect";
 import { useWeather } from "./hooks/useWeather";
 import WeatherWidget from "./components/WeatherWidget";
 import Auth from "./components/Auth";
+import { useAuth } from "./hooks/useAuth";   // ← añadido
 
 const LABELS = [
   "Preferencia 1",
@@ -14,15 +15,14 @@ const LABELS = [
 ];
 
 const App: React.FC = () => {
+  /* -------- autenticación -------- */
+  const { user, logout } = useAuth();        // ← reemplaza estado local
+
+  /* -------- estado clima y UI ----- */
   const [locationQuery, setLocationQuery] = useState<string | null>(null);
   const [manualInput, setManualInput] = useState("");
   const [geoError, setGeoError] = useState<string | null>(null);
   const [detecting, setDetecting] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  //if (!isAuthenticated) {
-  //return <Auth onAuthSuccess={() => setIsAuthenticated(true)} />;
-  //}
 
   const {
     condiciones,
@@ -89,6 +89,12 @@ const App: React.FC = () => {
     }
   };
 
+  /* ---------- si no hay usuario, mostrar Auth -------- */
+  if (!user) {
+    return <Auth onAuthSuccess={() => window.location.reload()} />;
+  }
+
+  /* ---------- UI principal (igual que antes) ---------- */
   return (
     <div className="h-screen flex flex-col">
       {/* Barra superior */}
@@ -104,6 +110,14 @@ const App: React.FC = () => {
           />
           <h1 className="text-3xl font-bold text-white">Climátika</h1>
         </div>
+
+        {/* Botón salir */}
+        <button
+          onClick={logout}
+          className="absolute left-6 top-1/2 transform -translate-y-1/2 text-white underline"
+        >
+          Salir
+        </button>
 
         {condiciones && (
           <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
@@ -202,8 +216,10 @@ const App: React.FC = () => {
                   {profile.activities
                     .filter((actividad) => {
                       const esAdecuada =
-                        condiciones.temperatura >= actividad.temperatura.min &&
-                        condiciones.temperatura <= actividad.temperatura.max &&
+                        condiciones.temperatura >=
+                          actividad.temperatura.min &&
+                        condiciones.temperatura <=
+                          actividad.temperatura.max &&
                         condiciones.viento <= actividad.vientoMax &&
                         (!condiciones.lluvia || actividad.lluviaPermitida) &&
                         condiciones.indiceUV <= actividad.indiceUVMax;
