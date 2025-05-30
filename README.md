@@ -30,10 +30,16 @@ Actualmente se encuentra en una versión preliminar que tiene las siguientes car
      REACT_APP_WEATHER_API_KEY=tu-clave-aqui
      ```
 4. Inicia la aplicación:
+   - Inicia el backend en una ventana de comandos:
    ```bash
-   npm start
+   npm run dev:api
    ```
-5. Abre `http://localhost:XXXX` en tu navegador.
+
+   - Inicia la aplicación frontend en otra ventana de comandos:
+   ```bash
+   npm run dev
+   ```
+6. Abre `http://localhost:XXXX` en tu navegador.
 
 ## Créditos
 Desarrollado por Equipo 2 del curso Ingeniería de Software 2, UdeC.
