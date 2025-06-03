@@ -32,7 +32,7 @@ Actualmente se encuentra en una versión preliminar que tiene las siguientes car
 4. Inicia la aplicación:
    - Inicia el backend en una ventana de comandos:
    ```bash
-   npm run dev:api
+   node backend.js
    ```
 
    - Inicia la aplicación frontend en otra ventana de comandos:
