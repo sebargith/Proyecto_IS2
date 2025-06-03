@@ -1,8 +1,7 @@
 import 'dotenv/config';
 import http from 'http';
-
 import { Client } from 'pg';
-
+import bcrypt from 'bcrypt';
 
 const { DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
 
@@ -14,66 +13,65 @@ const client = new Client({
   database: DB_DATABASE,
 });
 
-
 await client.connect();
 
-http.createServer(async function(req, res) {
+http.createServer(async function (req, res) {
   let rawData;
 
   req
     .on('data', chunk => { rawData = JSON.parse(chunk); })
-    .on('end',  async () => {
+    .on('end', async () => {
       const { username, password, route } = rawData;
 
       switch (route) {
         case '/register': {
           const { rows } = await client.query(
-            `
-            SELECT email
-              FROM usuario
-              WHERE email = '${username}'`
+            `SELECT email FROM usuario WHERE email = $1`,
+            [username]
           );
-          if (rows.length == 1) {
-              res.statusCode = 409;
-              res.end();
-              break;
+
+          if (rows.length === 1) {
+            res.statusCode = 409;
+            return res.end();
           }
 
+          const hashedPassword = await bcrypt.hash(password, 10);
+
           await client.query(
-            `
-            INSERT INTO usuario (username, email, password, age)
-              VALUES    ('${username}', '${username}', '${password}', 0)`
+            `INSERT INTO usuario (username, email, password, age)
+             VALUES ($1, $2, $3, 0)`,
+            [username, username, hashedPassword]
           );
 
           res.write(username);
-          res.end();
-          break;
+          return res.end();
         }
+
         case '/login': {
           const { rows } = await client.query(
-            `
-            SELECT username, email, password
-              FROM usuario
-              WHERE email = '${username}' AND password = '${password}';`
+            `SELECT username, password FROM usuario WHERE email = $1`,
+            [username]
           );
-          switch (rows.length) {
-            case 0:
-              res.statusCode = 401;
-              res.end();
-              break;
-            case 1:
-              res.write(username);
-              res.end();
-              break;
+
+          if (rows.length === 0) {
+            res.statusCode = 401;
+            return res.end(); 
           }
-          break;
+
+          const valid = await bcrypt.compare(password, rows[0].password);
+          if (!valid) {
+            res.statusCode = 401;
+            return res.end(); 
+          }
+
+          res.write(rows[0].username);
+          return res.end();
         }
+
         default:
-          res.write('Error!');
-          res.end();
-          break;
+          res.statusCode = 404;
+          res.write('Ruta no válida');
+          return res.end();
       }
     });
-})
-.listen(8000);
-
+}).listen(8000);
