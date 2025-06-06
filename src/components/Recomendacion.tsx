@@ -1,6 +1,7 @@
-import React from 'react';
-import { Actividad } from '../activities';
-import { CondicionesClimaticas } from '../hooks/useWeather';
+import React from "react";
+import { Actividad } from "../activities";
+import { etiquetas } from "../activities";
+import { CondicionesClimaticas } from "../hooks/useWeather";
 
 interface Props {
   actividad: Actividad;
@@ -16,6 +17,10 @@ const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
     viento <= actividad.vientoMax &&
     (!lluvia || actividad.lluviaPermitida) &&
     indiceUV <= actividad.indiceUVMax;
+
+  const etiquetasActividad = etiquetas
+    .filter((etiqueta) => actividad.etiquetas.includes(etiqueta.id))
+    .map((etiqueta) => etiqueta.nombre);
 
   return (
     <article
@@ -41,18 +46,30 @@ const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
 
         <p className="text-xs text-gray-600">
           Condiciones actuales: {temperatura} °C, {viento} km/h,&nbsp;
-          {lluvia ? 'lluvia' : 'sin lluvia'}, UV: {indiceUV}
+          {lluvia ? "lluvia" : "sin lluvia"}, UV: {indiceUV}
         </p>
 
         <p
           className={`text-sm font-semibold ${
-            esAdecuada ? 'text-green-600' : 'text-red-600'
+            esAdecuada ? "text-green-600" : "text-red-600"
           }`}
         >
           {esAdecuada
-            ? 'Condiciones ideales para esta actividad.'
-            : 'No se recomienda realizar esta actividad en este momento.'}
+            ? "Condiciones ideales para esta actividad."
+            : "No se recomienda realizar esta actividad en este momento."}
         </p>
+
+        {}
+        <div className="flex flex-wrap gap-2 pt-2">
+          {etiquetasActividad.map((nombre, index) => (
+            <span
+              key={index}
+              className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full"
+            >
+              {nombre}
+            </span>
+          ))}
+        </div>
       </div>
     </article>
   );

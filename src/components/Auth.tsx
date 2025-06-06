@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 interface Props {
   onAuthSuccess: () => void;
@@ -12,8 +12,13 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
 
   /* Estado del formulario */
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    age: "",
+  });
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,28 +27,40 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.email || !form.password) {
-      return setError('Completa todos los campos.');
+    if (
+      !form.email ||
+      !form.password ||
+      (!isLogin && (!form.username || !form.age))
+    ) {
+      return setError("Completa todos los campos.");
     }
 
     try {
-      const route = isLogin ? '/login' : '/register';
+      const route = isLogin ? "/login" : "/register";
       /* El backend usa `username`, aquí enviamos el email como tal */
-      const payload = { username: form.email, password: form.password, route };
+      const payload = isLogin
+        ? { email: form.email, password: form.password, route } // backend espera "username" como email
+        : {
+            username: form.username,
+            email: form.email,
+            password: form.password,
+            age: Number(form.age),
+            route,
+          };
 
       const { data } = await axios.post(route, payload); // { id, username } si es login
 
       if (isLogin) {
-        localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem("user", JSON.stringify(data));
       }
 
-      setError('');
-      onAuthSuccess();                // avisa a App para recargar
+      setError("");
+      onAuthSuccess(); // avisa a App para recargar
     } catch (err: any) {
       const st = err.response?.status;
-      if (st === 409) setError('El correo ya está registrado.');
-      else if (st === 401) setError('Credenciales inválidas.');
-      else setError('Error del servidor.');
+      if (st === 409) setError("El correo ya está registrado.");
+      else if (st === 401) setError("Credenciales inválidas.");
+      else setError("Error del servidor.");
     }
   };
 
@@ -61,11 +78,23 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
         </div>
 
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
+          {isLogin ? "Iniciar Sesión" : "Registrarse"}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
-          {/* Correo */}
+          {!isLogin && (
+            <>
+              <input
+                name="username"
+                type="text"
+                placeholder="Nombre de usuario"
+                value={form.username}
+                onChange={handleChange}
+                className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </>
+          )}
+
           <input
             name="email"
             type="email"
@@ -74,7 +103,7 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
             onChange={handleChange}
             className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          {/* Contraseña */}
+
           <input
             name="password"
             type="password"
@@ -84,13 +113,26 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
             className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
 
+          {!isLogin && (
+            <>
+              <input
+                name="age"
+                type="number"
+                placeholder="Edad"
+                value={form.age}
+                onChange={handleChange}
+                className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </>
+          )}
+
           {error && <p className="text-red-600 text-sm">{error}</p>}
 
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition"
           >
-            {isLogin ? 'Entrar' : 'Registrarse'}
+            {isLogin ? "Entrar" : "Registrarse"}
           </button>
         </form>
 
@@ -99,12 +141,12 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
             className="text-blue-300 hover:text-white underline text-sm"
             onClick={() => {
               setIsLogin(!isLogin);
-              setError('');
+              setError("");
             }}
           >
             {isLogin
-              ? '¿No tienes cuenta? Regístrate'
-              : '¿Ya tienes cuenta? Inicia sesión'}
+              ? "¿No tienes cuenta? Regístrate"
+              : "¿Ya tienes cuenta? Inicia sesión"}
           </button>
         </div>
       </div>
