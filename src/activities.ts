@@ -30,13 +30,14 @@ export interface UmbralesClimaticos {
 
 export interface Actividad {
   nombre: string;
-  temperatura: UmbralesClimaticos;
+  temperatura: { min: number; max: number };
   vientoMax: number;
   lluviaPermitida: boolean;
   indiceUVMax: number;
   imagen: string;
   descripcion: string;
   etiquetas: number[];
+  ciudad: string; // <--- NUEVO CAMPO
 }
 
 export const actividades: Actividad[] = [
@@ -50,6 +51,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad física al aire libre que consiste en correr, ideal para mantener la salud cardiovascular.",
     etiquetas: [2, 11, 9],
+    ciudad: "", // <--- AGREGADO
   },
   {
     nombre: "Jardinería",
@@ -61,6 +63,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Trabajo en el jardín, que puede incluir plantar, regar y cuidar las plantas y flores.",
     etiquetas: [9, 14, 13],
+    ciudad: "",
   },
   {
     nombre: "Senderismo",
@@ -72,6 +75,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorridos a pie por caminos y rutas naturales, disfrutando del paisaje y la naturaleza.",
     etiquetas: [9, 7, 10],
+    ciudad: "",
   },
   {
     nombre: "Entrenamiento en gimnasio",
@@ -83,6 +87,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Ejercicio físico realizado en un gimnasio con el uso de máquinas, pesas y otros equipos.",
     etiquetas: [2, 11],
+    ciudad: "",
   },
   {
     nombre: "Manualidades en familia",
@@ -94,6 +99,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividades creativas y artísticas que pueden realizarse en familia, como pintar, coser o construir objetos.",
     etiquetas: [1, 4, 16],
+    ciudad: "",
   },
   {
     nombre: "Caza del tesoro",
@@ -105,6 +111,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Juego de aventura en el que los participantes buscan objetos escondidos basados en pistas.",
     etiquetas: [7, 16],
+    ciudad: "",
   },
   {
     nombre: "Meditación guiada",
@@ -116,6 +123,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Práctica de relajación y mindfulness guiada por una voz que ayuda a calmar la mente.",
     etiquetas: [8, 13],
+    ciudad: "",
   },
   {
     nombre: "Observación de la naturaleza",
@@ -127,6 +135,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad tranquila que consiste en observar y disfrutar de la fauna y flora en su entorno natural.",
     etiquetas: [9, 10],
+    ciudad: "",
   },
   {
     nombre: "Pintura en taller",
@@ -138,6 +147,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad artística que se realiza en un taller donde se pinta sobre lienzos o cualquier otro material.",
     etiquetas: [1, 13],
+    ciudad: "",
   },
   {
     nombre: "Fotografía en la naturaleza",
@@ -149,6 +159,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Captura de imágenes de paisajes naturales, flora y fauna, utilizando cámaras fotográficas.",
     etiquetas: [9, 3, 10],
+    ciudad: "",
   },
   {
     nombre: "Picnic en el parque",
@@ -160,6 +171,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Reunión al aire libre para compartir comida y disfrutar del entorno natural.",
     etiquetas: [9, 4, 15],
+    ciudad: "",
   },
   {
     nombre: "Paseo en bicicleta",
@@ -171,6 +183,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad física y recreativa en la que se recorre una ruta montado en bicicleta.",
     etiquetas: [2, 7, 9],
+    ciudad: "",
   },
   {
     nombre: "Lectura al aire libre",
@@ -182,6 +195,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Momento tranquilo para disfrutar de un buen libro en un parque o jardín.",
     etiquetas: [1, 8, 9],
+    ciudad: "",
   },
   {
     nombre: "Observación de aves",
@@ -193,6 +207,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad que consiste en observar e identificar distintas especies de aves.",
     etiquetas: [9, 10],
+    ciudad: "",
   },
   {
     nombre: "Patinaje en parque",
@@ -204,6 +219,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad recreativa sobre ruedas, ideal para disfrutar en espacios pavimentados al aire libre.",
     etiquetas: [2, 7],
+    ciudad: "",
   },
   {
     nombre: "Pesca recreativa",
@@ -215,6 +231,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad de ocio que consiste en capturar peces, generalmente como pasatiempo.",
     etiquetas: [9, 2, 12],
+    ciudad: "",
   },
   {
     nombre: "Caminata por la playa",
@@ -226,6 +243,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Paseo tranquilo por la orilla del mar, ideal para relajarse y disfrutar del paisaje.",
     etiquetas: [8, 9, 7],
+    ciudad: "",
   },
   {
     nombre: "Observación de estrellas",
@@ -237,6 +255,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad nocturna para contemplar el cielo y aprender sobre astronomía.",
     etiquetas: [9, 10],
+    ciudad: "",
   },
   {
     nombre: "Ciclismo de montaña",
@@ -248,6 +267,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Deporte al aire libre que se practica en terrenos montañosos o caminos rurales.",
     etiquetas: [2, 7, 9],
+    ciudad: "",
   },
   {
     nombre: "Escalada en roca",
@@ -259,6 +279,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Deporte desafiante que consiste en subir superficies rocosas usando técnica y fuerza.",
     etiquetas: [2, 7],
+    ciudad: "",
   },
   {
     nombre: "Tour fotográfico",
@@ -270,6 +291,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorrido por lugares pintorescos o históricos para capturar fotografías.",
     etiquetas: [3, 7, 10],
+    ciudad: "",
   },
   {
     nombre: "Taller de cerámica",
@@ -281,6 +303,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Actividad manual en la que se modela y hornea barro para crear objetos útiles o decorativos.",
     etiquetas: [1, 4, 3],
+    ciudad: "",
   },
   {
     nombre: "Paseo con mascotas",
@@ -291,6 +314,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/paseo_mascota.jpg",
     descripcion: "Actividad para caminar y ejercitarse acompañado de mascotas.",
     etiquetas: [2, 4, 9],
+    ciudad: "",
   },
   {
     nombre: "Slackline en parque",
@@ -302,6 +326,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Deporte de equilibrio que se realiza sobre una cinta tensa entre dos puntos.",
     etiquetas: [2, 7, 9],
+    ciudad: "",
   },
   {
     nombre: "Tiro con arco en campo",
@@ -313,6 +338,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Deporte de precisión que consiste en disparar flechas a un blanco con un arco.",
     etiquetas: [2, 7],
+    ciudad: "",
   },
   {
     nombre: "Avistamiento de mariposas",
@@ -323,6 +349,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/mariposas.jpg",
     descripcion: "Observación y fotografía de mariposas en su hábitat natural.",
     etiquetas: [9, 4, 10],
+    ciudad: "",
   },
   {
     nombre: "Baile libre al aire libre",
@@ -334,6 +361,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Danza sin coreografía en espacios abiertos para expresarse y ejercitarse.",
     etiquetas: [3, 6],
+    ciudad: "",
   },
   {
     nombre: "Campamento nocturno",
@@ -345,6 +373,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Pasar la noche en carpa al aire libre, disfrutando de la naturaleza.",
     etiquetas: [9, 7, 14],
+    ciudad: "",
   },
   {
     nombre: "Paseo en bote",
@@ -356,6 +385,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Travesía relajante en bote por ríos o lagos, ideal para disfrutar el paisaje acuático.",
     etiquetas: [9, 12],
+    ciudad: "",
   },
   {
     nombre: "Paseo a caballo",
@@ -367,6 +397,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Montar a caballo por senderos naturales o rurales, ideal para conectar con la naturaleza.",
     etiquetas: [9, 7, 8],
+    ciudad: "",
   },
   {
     nombre: "Huerto en casa",
@@ -378,6 +409,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Cultivar hortalizas y plantas en espacios reducidos como terrazas o balcones.",
     etiquetas: [14, 1, 9],
+    ciudad: "",
   },
   {
     nombre: "Dibujo con tizas en la vereda",
@@ -389,6 +421,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Arte efímero en la calle usando tizas de colores sobre pavimento.",
     etiquetas: [1, 3],
+    ciudad: "",
   },
   {
     nombre: "Carrera de sacos",
@@ -400,6 +433,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Juego tradicional donde los participantes saltan dentro de sacos hasta una meta.",
     etiquetas: [6, 2],
+    ciudad: "",
   },
   {
     nombre: "Juego de escondidas",
@@ -411,6 +445,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Juego infantil clásico donde un jugador busca a los demás mientras se esconden.",
     etiquetas: [6, 2],
+    ciudad: "",
   },
   {
     nombre: "Paseo por la UdeC",
@@ -422,6 +457,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Visitar el Campus de la Universidad de Concepción, un lugar emblemático con hermosa arquitectura y áreas verdes.",
     etiquetas: [10, 16],
+    ciudad: "Concepción",
   },
   {
     nombre: "Ir a la playa en Ramuntcho",
@@ -432,6 +468,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/ramuntcho.jpg",
     descripcion: "Ir a la playa a relajarse y tomar Sol.",
     etiquetas: [9, 12],
+    ciudad: "Concepción",
   },
   {
     nombre: "Paseo en bicicleta a Cerro Caracol",
@@ -442,6 +479,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/bicicleta_caracol.jpg",
     descripcion: "Recorrer el Cerro Caracol en Bicicleta.",
     etiquetas: [2, 7, 9],
+    ciudad: "Concepción",
   },
   {
     nombre: "Practicar Tenis en canchas del Parque Ecuador",
@@ -452,6 +490,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/tenis_ecuador.jpg",
     descripcion: "Practicar tenis en las canchas del parque Ecuador.",
     etiquetas: [2, 6],
+    ciudad: "Concepción",
   },
   {
     nombre: "Arriendo de Karts en Mall del Trébol",
@@ -463,6 +502,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Hacer carreras de karting en circuito ubicado en el Mall Plaza Trébol",
     etiquetas: [2, 6, 7],
+    ciudad: "Concepción",
   },
   {
     nombre: "Visitar el Cerro San Cristóbal",
@@ -474,6 +514,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Ascender el Cerro San Cristóbal para disfrutar de vistas panorámicas de Santiago, visitar el Santuario de la Inmaculada Concepción y pasear por el Parque Metropolitano.",
     etiquetas: [10, 9, 12],
+    ciudad: "Santiago",
   },
   {
     nombre: "Explorar el Barrio Lastarria y Bellas Artes",
@@ -485,6 +526,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorrer las calles bohemias del Barrio Lastarria, visitar el Museo Nacional de Bellas Artes, explorar tiendas de diseño, librerías y disfrutar de la oferta gastronómica y cultural.",
     etiquetas: [10, 16],
+    ciudad: "Santiago",
   },
   {
     nombre: "Pasear por el Parque Forestal",
@@ -496,6 +538,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Disfrutar de un paseo relajante por el Parque Forestal, un oasis verde en el centro de Santiago, admirando esculturas, fuentes y la arquitectura circundante.",
     etiquetas: [9, 10],
+    ciudad: "Santiago",
   },
   {
     nombre: "Conocer el Palacio de La Moneda",
@@ -507,6 +550,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Visitar el Palacio de La Moneda, sede del gobierno de Chile, y conocer su historia y arquitectura. Posiblemente presenciar el cambio de guardia.",
     etiquetas: [10, 12, 16],
+    ciudad: "Santiago",
   },
   {
     nombre: "Recorrer el Mercado Central y La Vega",
@@ -518,6 +562,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Sumergirse en la vibrante vida local visitando el Mercado Central para probar mariscos y pescados frescos, y La Vega Central para conocer la variedad de productos agrícolas y artesanías.",
     etiquetas: [10, 12, 3],
+    ciudad: "Santiago",
   },
   {
     nombre: "Explorar las Iglesias de Chiloé",
@@ -529,6 +574,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorrer las icónicas iglesias de madera de Chiloé, reconocidas como Patrimonio de la Humanidad por la UNESCO, admirando su arquitectura única.",
     etiquetas: [10, 16],
+    ciudad: "Castro",
   },
   {
     nombre: "Visitar el Parque Nacional Chiloé",
@@ -540,6 +586,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Senderismo y exploración de la naturaleza exuberante del Parque Nacional Chiloé, hogar de bosques nativos, dunas y una rica biodiversidad.",
     etiquetas: [9, 17],
+    ciudad: "Castro",
   },
   {
     nombre: "Paseo en bote por los palafitos de Castro",
@@ -551,6 +598,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Navegar entre los coloridos palafitos de Castro, las casas sobre pilotes que son un símbolo de la arquitectura chilota y ofrecen una perspectiva única de la ciudad.",
     etiquetas: [9, 12],
+    ciudad: "Castro",
   },
   {
     nombre: "Recorrer los mercados artesanales",
@@ -562,6 +610,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Visitar los mercados de artesanía local para encontrar tejidos de lana, objetos de madera, y productos típicos de la isla, conociendo la rica tradición artesanal de Chiloé.",
     etiquetas: [10, 14],
+    ciudad: "Castro",
   },
   {
     nombre: "Ir de pesca en chiloe",
@@ -572,6 +621,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/pesca_chiloe.jpg",
     descripcion: "Ir de pesca deportiva al río Gamboa.",
     etiquetas: [2, 17],
+    ciudad: "Castro",
   },
   {
     nombre: "Pasear por los Cerros de Valparaíso y sus ascensores",
@@ -583,6 +633,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorrer a pie los coloridos cerros de Valparaíso, descubriendo sus laberínticas calles, pasajes y escaleras, y utilizando los históricos ascensores para subir y bajar.",
     etiquetas: [10, 12],
+    ciudad: "Valparaíso",
   },
   {
     nombre: "Explorar el Muelle Prat y el Puerto",
@@ -594,6 +645,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Visitar el Muelle Prat para observar la actividad portuaria, disfrutar de las vistas de la bahía y tomar un paseo en lancha para ver la ciudad desde el mar.",
     etiquetas: [10, 9],
+    ciudad: "Valparaíso",
   },
   {
     nombre: "Visitar las dunas de Concon",
@@ -604,6 +656,7 @@ export const actividades: Actividad[] = [
     imagen: "/assets/actividades/concon_dunas.jpg",
     descripcion: "Visitar las dunas de Concon a las afueras de Valparaíso.",
     etiquetas: [9, 17],
+    ciudad: "Valparaíso",
   },
   {
     nombre: "Conocer los Ascensores de Valparaíso",
@@ -615,6 +668,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Conocer los históricos ascensores que han servido para transportarse en los cerros para los habitantes de Valparaíso.",
     etiquetas: [10, 16],
+    ciudad: "Valparaíso",
   },
   {
     nombre: "Catamarán en la bahía de Valparaíso",
@@ -626,6 +680,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorrer la bahía de Valparaíso en catamarán para tener una vista única de sus cerros.",
     etiquetas: [9, 17],
+    ciudad: "Valparaíso",
   },
   {
     nombre: "Visitar el Cerro Ñielol",
@@ -637,6 +692,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Ascender el Cerro Ñielol, un parque urbano con senderos, miradores y un importante valor cultural para el pueblo Mapuche, ofreciendo vistas de la ciudad.",
     etiquetas: [9, 10, 16],
+    ciudad: "Temuco",
   },
   {
     nombre: "Explorar el Mercado Municipal de Temuco",
@@ -648,6 +704,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Recorrer el Mercado Municipal para encontrar productos regionales, artesanía Mapuche, frutas, verduras y disfrutar de la gastronomía local.",
     etiquetas: [10, 3, 14],
+    ciudad: "Temuco",
   },
   {
     nombre: "Pasear por la Plaza de Armas Aníbal Pinto",
@@ -659,6 +716,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Disfrutar de un momento de relajo en la Plaza de Armas de Temuco, el corazón de la ciudad, rodeada de edificios históricos y áreas verdes.",
     etiquetas: [9, 12, 17],
+    ciudad: "Temuco",
   },
   {
     nombre: "Visitar el Museo Regional de La Araucanía",
@@ -670,6 +728,7 @@ export const actividades: Actividad[] = [
     descripcion:
       "Aprender sobre la historia, cultura y tradiciones del pueblo Mapuche y la región de La Araucanía a través de las exposiciones del museo.",
     etiquetas: [10, 16],
+    ciudad: "Temuco",
   },
   {
     nombre: "Recorrer el Parque Estadio Germán Becker",
@@ -681,5 +740,6 @@ export const actividades: Actividad[] = [
     descripcion:
       "Disfrutar de actividades al aire libre en el Parque Estadio Germán Becker, con áreas verdes, juegos infantiles y un estadio deportivo.",
     etiquetas: [2, 17],
+    ciudad: "Temuco",
   },
 ];

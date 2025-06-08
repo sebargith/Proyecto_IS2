@@ -129,7 +129,7 @@ const App: React.FC = () => {
 
   const actividadesRecomendadas = condiciones
     ? actividades.filter((actividad) => {
-        const { temperatura, viento, lluvia, indiceUV } = condiciones;
+        const { temperatura, viento, lluvia, indiceUV, ciudad } = condiciones;
 
         const cumpleClima =
           temperatura >= actividad.temperatura.min &&
@@ -142,7 +142,18 @@ const App: React.FC = () => {
           preferenciasUsuario.includes(id)
         );
 
-        return cumpleClima && tienePreferencia;
+        // Validación de ciudad ignora tildes y mayúsculas
+        const normalize = (str: string) =>
+          str
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+
+        const ciudadValida =
+          actividad.ciudad === "" ||
+          normalize(actividad.ciudad) === normalize(ciudad);
+
+        return cumpleClima && tienePreferencia && ciudadValida;
       })
     : [];
   const storedUser = JSON.parse(localStorage.getItem("user") || "null");
