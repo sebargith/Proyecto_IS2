@@ -37,7 +37,7 @@ export interface Actividad {
   imagen: string;
   descripcion: string;
   etiquetas: number[];
-  ciudad: string; // <--- NUEVO CAMPO
+  ciudad: string;
 }
 
 export const actividades: Actividad[] = [
