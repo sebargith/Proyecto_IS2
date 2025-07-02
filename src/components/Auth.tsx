@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
   onAuthSuccess: () => void;
@@ -65,92 +66,131 @@ const Auth: React.FC<Props> = ({ onAuthSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-500 via-sky-400 to-blue-500">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md text-center">
-        {/* Logo y nombre */}
-        <div className="flex flex-col items-center mb-6">
-          <img
-            src="public/assets/logo.png"
-            alt="Logo"
-            className="h-20 w-20 rounded-full mb-2"
-          />
-          <h1 className="text-3xl font-bold text-blue-700">Climátika</h1>
-        </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="auth-bg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-500 via-sky-400 to-blue-500"
+      >
+        <motion.div
+          key="auth-card"
+          initial={{ opacity: 0, scale: 0.95, y: 40 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 40 }}
+          transition={{ duration: 0.5, type: "spring" }}
+          className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md text-center"
+        >
+          {/* Logo y nombre */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+            className="flex flex-col items-center mb-6"
+          >
+            <img
+              src="public/assets/logo.png"
+              alt="Logo"
+              className="h-20 w-20 rounded-full mb-2 shadow-lg"
+            />
+            <h1 className="text-3xl font-bold text-blue-700">Climátika</h1>
+          </motion.div>
 
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          {isLogin ? "Iniciar Sesión" : "Registrarse"}
-        </h2>
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+            className="text-xl font-semibold text-gray-800 mb-4"
+          >
+            {isLogin ? "Iniciar Sesión" : "Registrarse"}
+          </motion.h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-left">
-          {!isLogin && (
-            <>
+          <AnimatePresence mode="wait">
+            <motion.form
+              key={isLogin ? "login" : "register"}
+              onSubmit={handleSubmit}
+              className="space-y-4 text-left"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4 }}
+            >
+              {!isLogin && (
+                <input
+                  name="username"
+                  type="text"
+                  placeholder="Nombre de usuario"
+                  value={form.username}
+                  onChange={handleChange}
+                  className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              )}
+
               <input
-                name="username"
-                type="text"
-                placeholder="Nombre de usuario"
-                value={form.username}
+                name="email"
+                type="email"
+                placeholder="Correo electrónico"
+                value={form.email}
                 onChange={handleChange}
                 className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
-            </>
-          )}
 
-          <input
-            name="email"
-            type="email"
-            placeholder="Correo electrónico"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-
-          <input
-            name="password"
-            type="password"
-            placeholder="Contraseña"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-
-          {!isLogin && (
-            <>
               <input
-                name="age"
-                type="number"
-                placeholder="Edad"
-                value={form.age}
+                name="password"
+                type="password"
+                placeholder="Contraseña"
+                value={form.password}
                 onChange={handleChange}
                 className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
-            </>
-          )}
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
+              {!isLogin && (
+                <input
+                  name="age"
+                  type="number"
+                  placeholder="Edad"
+                  value={form.age}
+                  onChange={handleChange}
+                  className="w-full p-3 rounded-xl border border-blue-300 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              )}
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition"
+              {error && <p className="text-red-600 text-sm">{error}</p>}
+
+              <motion.button
+                type="submit"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl transition"
+              >
+                {isLogin ? "Entrar" : "Registrarse"}
+              </motion.button>
+            </motion.form>
+          </AnimatePresence>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="mt-4"
           >
-            {isLogin ? "Entrar" : "Registrarse"}
-          </button>
-        </form>
-
-        <div className="mt-4">
-          <button
-            className="text-blue-300 hover:text-white underline text-sm"
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setError("");
-            }}
-          >
-            {isLogin
-              ? "¿No tienes cuenta? Regístrate"
-              : "¿Ya tienes cuenta? Inicia sesión"}
-          </button>
-        </div>
-      </div>
-    </div>
+            <button
+              className="text-blue-300 hover:text-white underline text-sm transition"
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setError("");
+              }}
+            >
+              {isLogin
+                ? "¿No tienes cuenta? Regístrate"
+                : "¿Ya tienes cuenta? Inicia sesión"}
+            </button>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

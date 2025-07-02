@@ -6,9 +6,14 @@ import { CondicionesClimaticas } from "../hooks/useWeather";
 interface Props {
   actividad: Actividad;
   condiciones: CondicionesClimaticas;
+  preferenciasUsuario: number[]; // <-- Agrega esto
 }
 
-const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
+const Recomendacion: React.FC<Props> = ({
+  actividad,
+  condiciones,
+  preferenciasUsuario, // <-- Agrega esto
+}) => {
   const { temperatura, viento, lluvia, indiceUV } = condiciones;
 
   const esAdecuada =
@@ -20,7 +25,10 @@ const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
 
   const etiquetasActividad = etiquetas
     .filter((etiqueta) => actividad.etiquetas.includes(etiqueta.id))
-    .map((etiqueta) => etiqueta.nombre);
+    .map((etiqueta) => ({
+      ...etiqueta,
+      seleccionada: preferenciasUsuario.includes(etiqueta.id), // <-- Marca si es preferida
+    }));
 
   return (
     <article
@@ -59,14 +67,18 @@ const Recomendacion: React.FC<Props> = ({ actividad, condiciones }) => {
             : "No se recomienda realizar esta actividad en este momento."}
         </p>
 
-        {}
         <div className="flex flex-wrap gap-2 pt-2">
-          {etiquetasActividad.map((nombre, index) => (
+          {etiquetasActividad.map((etiqueta, index) => (
             <span
               key={index}
-              className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full"
+              className={`text-xs px-2 py-1 rounded-full
+                ${
+                  etiqueta.seleccionada
+                    ? "bg-yellow-300 text-yellow-900 font-bold border border-yellow-500"
+                    : "bg-blue-100 text-blue-600"
+                }`}
             >
-              {nombre}
+              {etiqueta.nombre}
             </span>
           ))}
         </div>
