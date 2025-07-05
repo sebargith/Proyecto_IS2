@@ -23,6 +23,9 @@ const App: React.FC = () => {
   const [manualInput, setManualInput] = useState("");
   const [geoError, setGeoError] = useState<string | null>(null);
   const [detecting, setDetecting] = useState(false);
+  const [activeTab, setActiveTab] = useState<"recomendadas" | "ia">(
+    "recomendadas"
+  );
 
   const [preferenciasUsuario, setPreferenciasUsuario] = useState<number[]>([]);
   const [nombresPreferencias, setNombresPreferencias] = useState<string[]>([]);
@@ -398,23 +401,53 @@ const App: React.FC = () => {
                     Recomendaciones para hoy
                   </h2>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {actividadesRecomendadas.length > 0 ? (
-                      actividadesRecomendadas.map((actividad) => (
-                        <Recomendacion
-                          key={actividad.nombre}
-                          actividad={actividad}
-                          condiciones={condiciones}
-                          preferenciasUsuario={preferenciasUsuario}
-                        />
-                      ))
-                    ) : (
-                      <p className="text-gray-600 text-sm col-span-full">
-                        No hay actividades recomendadas con las condiciones
-                        actuales.
-                      </p>
-                    )}
+                  <div className="flex gap-4 mt-8 mb-6">
+                    <button
+                      onClick={() => setActiveTab("recomendadas")}
+                      className={`flex-1 py-2 px-4 rounded-xl font-semibold transition-all duration-300 shadow ${
+                        activeTab === "recomendadas"
+                          ? "bg-blue-500 text-white"
+                          : "bg-blue-100 text-blue-900 hover:bg-blue-200"
+                      }`}
+                    >
+                      Recomendaciones normales
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("ia")}
+                      className={`flex-1 py-2 px-4 rounded-xl font-semibold transition-all duration-300 shadow ${
+                        activeTab === "ia"
+                          ? "bg-blue-500 text-white"
+                          : "bg-blue-100 text-blue-900 hover:bg-blue-200"
+                      }`}
+                    >
+                      Sugeridas por IA
+                    </button>
                   </div>
+
+                  {activeTab === "recomendadas" && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {actividadesRecomendadas.length > 0 ? (
+                        actividadesRecomendadas.map((actividad) => (
+                          <Recomendacion
+                            key={actividad.nombre}
+                            actividad={actividad}
+                            condiciones={condiciones}
+                            preferenciasUsuario={preferenciasUsuario}
+                          />
+                        ))
+                      ) : (
+                        <p className="text-gray-600 text-sm col-span-full">
+                          No hay actividades recomendadas con las condiciones
+                          actuales.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  {activeTab === "ia" && (
+                    <div>
+                      {/* aqui van las actividdades recomendadas por ia */}
+                    </div>
+                  )}
                 </>
               )}
             </section>
