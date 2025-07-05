@@ -17,12 +17,8 @@ const SeleccionarPreferencias: React.FC<Props> = ({ onContinue }) => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-    console.log("Usuario recuperado del localStorage:", storedUser);
-
     if (storedUser) {
       setUser(storedUser);
-    } else {
-      console.log("No se encontró usuario en el localStorage.");
     }
   }, []);
 
@@ -50,6 +46,14 @@ const SeleccionarPreferencias: React.FC<Props> = ({ onContinue }) => {
     );
   };
 
+  const movePreference = (index: number, direction: "up" | "down") => {
+    const newOrder = [...selectedPreferences];
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= newOrder.length) return;
+    [newOrder[index], newOrder[newIndex]] = [newOrder[newIndex], newOrder[index]];
+    setSelectedPreferences(newOrder);
+  };
+
   const handleContinue = async () => {
     if (selectedPreferences.length < 3) {
       setError("Debes seleccionar al menos tres preferencias.");
@@ -58,7 +62,6 @@ const SeleccionarPreferencias: React.FC<Props> = ({ onContinue }) => {
 
     if (!user) {
       setError("El usuario no está autenticado.");
-      console.log("Usuario no autenticado:", user);
       return;
     }
 
@@ -87,21 +90,58 @@ const SeleccionarPreferencias: React.FC<Props> = ({ onContinue }) => {
         ) : error && preferencias.length === 0 ? (
           <p className="text-red-600 text-sm">{error}</p>
         ) : (
-          <div className="flex flex-wrap gap-2 mb-6 justify-center">
-            {preferencias.map((p) => (
-              <div
-                key={p.id_preferencia}
-                className={`px-4 py-2 rounded-full border cursor-pointer ${
-                  selectedPreferences.includes(p.id_preferencia)
-                    ? "bg-blue-600 text-white"
-                    : "border-blue-500 bg-white text-blue-500"
-                }`}
-                onClick={() => handleSelectPreference(p.id_preferencia)}
-              >
-                {p.nombre}
+          <>
+            <div className="flex flex-wrap gap-2 mb-6 justify-center">
+              {preferencias.map((p) => (
+                <div
+                  key={p.id_preferencia}
+                  className={`px-4 py-2 rounded-full border cursor-pointer ${
+                    selectedPreferences.includes(p.id_preferencia)
+                      ? "bg-blue-600 text-white"
+                      : "border-blue-500 bg-white text-blue-500"
+                  }`}
+                  onClick={() => handleSelectPreference(p.id_preferencia)}
+                >
+                  {p.nombre}
+                </div>
+              ))}
+            </div>
+
+            {/* Ordenar preferencias seleccionadas */}
+            {selectedPreferences.length > 0 && (
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold mb-2 text-blue-700">
+                  Ordena tus preferencias (más arriba = más importante):
+                </h2>
+                <ul className="space-y-2">
+                  {selectedPreferences.map((prefId, idx) => {
+                    const pref = preferencias.find(
+                      (p) => p.id_preferencia === prefId
+                    );
+                    return (
+                      <li key={prefId} className="flex items-center justify-between bg-blue-100 px-4 py-2 rounded-xl shadow">
+                        <span>{pref?.nombre}</span>
+                        <div className="space-x-2">
+                          <button
+                            onClick={() => movePreference(idx, "up")}
+                            className="text-blue-600 font-bold"
+                          >
+                            ⬆️
+                          </button>
+                          <button
+                            onClick={() => movePreference(idx, "down")}
+                            className="text-blue-600 font-bold"
+                          >
+                            ⬇️
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         {error && <p className="text-red-600 text-sm">{error}</p>}

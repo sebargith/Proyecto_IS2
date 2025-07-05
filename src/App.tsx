@@ -7,7 +7,7 @@ import SeleccionarPreferencias from "./components/SeleccionarPreferencias";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Recomendacion from "./components/Recomendacion";
-import { actividades } from "./activities";
+import { actividades, Actividad } from "./activities";
 
 interface Preferencia {
   id_preferencia: number;
@@ -158,6 +158,17 @@ const App: React.FC = () => {
       setCargandoPantalla(false);
     }, 700);
   };
+
+  const calcularPuntaje = (actividad: Actividad) => {
+   let puntaje = 0;
+   actividad.etiquetas.forEach((id) => {
+     const idx = preferenciasUsuario.indexOf(id);
+     if (idx === 0) puntaje += 0.5;
+     else if (idx === 1) puntaje += 0.3;
+     else if (idx === 2) puntaje += 0.2;
+    });
+    return puntaje;
+   };
   const actividadesRecomendadas = condiciones
     ? actividades
         .filter((actividad) => {
@@ -188,16 +199,23 @@ const App: React.FC = () => {
           return cumpleClima && tienePreferencia && ciudadValida;
         })
         // Ordenar por cantidad de coincidencias de etiquetas
-        .sort((a, b) => {
-          const coincidenciasA = a.etiquetas.filter((id) =>
-            preferenciasUsuario.includes(id)
-          ).length;
-          const coincidenciasB = b.etiquetas.filter((id) =>
-            preferenciasUsuario.includes(id)
-          ).length;
-          return coincidenciasB - coincidenciasA;
-        })
+        .sort((a, b) => calcularPuntaje(b) - calcularPuntaje(a))
     : [];
+
+  const moverPreferencia = (from: number, to: number) => {
+    setNombresPreferencias((prev) => {
+      const newPrefs = [...prev];
+      const [moved] = newPrefs.splice(from, 1);
+      newPrefs.splice(to, 0, moved);
+      return newPrefs;
+    });
+    setPreferenciasUsuario((prev) => {
+      const newOrder = [...prev];
+      const [moved] = newOrder.splice(from, 1);
+      newOrder.splice(to, 0, moved);
+      return newOrder;
+    });
+  };  
   const storedUser = JSON.parse(localStorage.getItem("user") || "null");
   return (
     <AnimatePresence mode="wait">
@@ -292,8 +310,26 @@ const App: React.FC = () => {
                         transition={{ duration: 0.35, ease: "easeInOut" }}
                         className="mt-2 text-base text-blue-700 list-disc pl-5 space-y-1 bg-blue-50 rounded-xl p-2 shadow-inner overflow-hidden"
                       >
-                        {nombresPreferencias.map((nombre) => (
-                          <li key={nombre}>{nombre}</li>
+                        {nombresPreferencias.map((nombre, idx) => (
+                          <li key={nombre} className="flex items-center justify-between">
+                            <span>{nombre}</span>
+                            <div className="flex gap-1 ml-2">
+                              <button
+                                onClick={() => moverPreferencia(idx, idx - 1)}
+                                disabled={idx === 0}
+                                className="text-blue-600 hover:text-blue-900 text-xs disabled:opacity-50"
+                              >
+                               ▲
+                              </button>
+                              <button
+                                onClick={() => moverPreferencia(idx, idx + 1)}
+                                disabled={idx === nombresPreferencias.length - 1}
+                                className="text-blue-600 hover:text-blue-900 text-xs disabled:opacity-50"
+                              >
+                                ▼
+                              </button>
+                            </div>
+                          </li>
                         ))}
                       </motion.ul>
                     )}
