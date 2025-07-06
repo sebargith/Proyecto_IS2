@@ -8,6 +8,8 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Recomendacion from "./components/Recomendacion";
 import { actividades, Actividad } from "./activities";
+import { useGemini } from "./hooks/useGemini";
+
 
 interface Preferencia {
   id_preferencia: number;
@@ -35,6 +37,17 @@ const App: React.FC = () => {
     isLoading: loadingWeather,
     error: weatherError,
   } = useWeather(locationQuery);
+
+     //gemini ....
+    const {
+      activities: aiActivities,
+      isLoading: loadingAI,
+      error: aiError,
+    } = useGemini({
+      city: condiciones?.ciudad,
+      enabled: activeTab === "ia",
+      userPreferences: preferenciasUsuario, // <--- Aquí está la conexión
+    });
 
   const fetchPreferenciasUsuario = useCallback(async () => {
     if (!user) return;
@@ -480,8 +493,26 @@ const App: React.FC = () => {
                     </div>
                   )}
                   {activeTab === "ia" && (
-                    <div>
-                      {/* aqui van las actividdades recomendadas por ia */}
+                    <div className="mt-4">
+                      {loadingAI && <p className="text-center text-gray-600">Generando recomendaciones con IA...</p>}
+                      {aiError && <p className="text-center text-red-600">Error de la IA: {aiError}</p>}
+                      
+                      {!loadingAI && !aiError && aiActivities.length === 0 && (
+                        <p className="text-center text-gray-500">No hay sugerencias de la IA para esta ubicación o aún no se han generado.</p>
+                      )}
+
+                      {aiActivities.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {aiActivities.map(actividad => (
+                            <Recomendacion
+                              key={actividad.nombre}
+                              actividad={actividad}
+                              condiciones={condiciones}
+                              preferenciasUsuario={preferenciasUsuario}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
