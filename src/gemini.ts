@@ -64,7 +64,7 @@ Para cada actividad, proporciona un objeto JSON con los siguientes campos detall
 - indiceUVMax: El índice UV máximo tolerable (0-11).
 - imagen: Un término de búsqueda corto en inglés para una imagen (ej. "hiking trail in a forest").
 - descripcion: Un resumen cautivador de 1-2 frases sobre la actividad.
-- etiquetas: Un array de números basado en la siguiente lista de categorías. ¡Usa solo los números de esta lista!
+- etiquetas: Retorna los numeros correspondientes de la siguiente lista encerrados en corchete, ejemplo [1, 2, 12]:
     1: Arte, 2: Deporte, 3: Música, 4: Familia, 5: Educación, 6: Social, 7: Aventura, 8: Relajación, 9: Naturaleza, 10: Cultura, 11: Salud, 12: Turismo, 13: Bienestar, 14: Ecología, 15: Vacaciones, 16: Convivencia, 17: Relaciones.
 - ciudad: El nombre de la ciudad, que debe ser "${city}".
 
@@ -79,11 +79,34 @@ Ejemplo de formato:
     "lluviaPermitida": true,
     "indiceUVMax": 11,
     "imagen": "michelin star restaurant elegant dining",
-    "descripcion": "Disfruta de una experiencia culinaria inolvidable en uno de los restaurantes más aclamados de la ciudad.",
-    "etiquetas": [2, 5],
+    "descripcion": "Disfruta de una experiencia culinaria inolvidable.",
+    "etiquetas": [4, 6],
+    "ciudad": "${city}"
+  },
+  {
+    "nombre": "Visita al estadio de la ciudad",
+    "temperatura": { "min": 10, "max": 30 },
+    "vientoMax": 30,
+    "lluviaPermitida": false,
+    "indiceUVMax": 11,
+    "imagen": "estadio ciudad",
+    "descripcion": "Disfruta de una experiencia deportiva conociendo el estadio del club.",
+    "etiquetas": [2, 6, 12],
+    "ciudad": "${city}"
+  },
+  {
+    "nombre": "Visita al teatro de la plaza",
+    "temperatura": { "min": 10, "max": 30 },
+    "vientoMax": 30,
+    "lluviaPermitida": true,
+    "indiceUVMax": 11,
+    "imagen": "teatro ciudad",
+    "descripcion": "descubre la cultura atraves de las obras del teatro .",
+    "etiquetas": [1, 6, 12],
     "ciudad": "${city}"
   }
 ]
+  
 `;
 };
 
@@ -103,6 +126,7 @@ export const generateActivitiesForCity = async (city: string, userPreferences: n
 
 
   const config = {
+
   tools: [groundingTool],
   responseMimeType: "text/plain",
     temperature: 0.8,
@@ -110,12 +134,12 @@ export const generateActivitiesForCity = async (city: string, userPreferences: n
 
   try {
     const response = await  genAI.models.generateContent({
-       model: "gemini-2.5-flash",
+       model: "gemini-2.0-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config,
     });
     
-    // ... (el resto de la función para parsear y validar el JSON no cambia) ...
+
     const responseText = response.text || '';
     console.log(responseText)
     const cleanJsonText = responseText.replace(/```json\n?|\n?```/g, "").trim();
