@@ -12,6 +12,7 @@ Actualmente se encuentra en una versión preliminar que tiene las siguientes car
 - Node.js
 - npm
 - Una clave de la API de [WeatherApi] (https://www.weatherapi.com/)
+- Una clave de la API de Gemini
 
 ## Instalación
 1. Clona el repositorio:
@@ -27,7 +28,8 @@ Actualmente se encuentra en una versión preliminar que tiene las siguientes car
    - Crea un archivo `.env` en la raíz del proyecto.
    - Añade tu clave de WeatherAPI:
      ```env
-     REACT_APP_WEATHER_API_KEY=tu-clave-aqui
+     VITE_API_KEY=tu-clave-api-weather
+     VITE_GEMINI_API_KEY= tu-clave-api-gemini
      ```
 4. Inicia la aplicación:
    - Inicia el backend en una ventana de comandos:
