@@ -7,6 +7,7 @@ import SeleccionarPreferencias from "./components/SeleccionarPreferencias";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Recomendacion from "./components/Recomendacion";
+import RecomendacionAI from "./components/RecomendacionAI";
 import { actividades, Actividad } from "./activities";
 import { useGemini } from "./hooks/useGemini";
 
@@ -504,7 +505,7 @@ const App: React.FC = () => {
                       {aiActivities.length > 0 && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                           {aiActivities.map(actividad => (
-                            <Recomendacion
+                            <RecomendacionAI
                               key={actividad.nombre}
                               actividad={actividad}
                               condiciones={condiciones}
